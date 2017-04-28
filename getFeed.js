@@ -3,6 +3,6 @@ FB.api(
   'GET',
   {},
   function(response) {
-      
+      console.log(response)
   }
 );

@@ -1,11 +1,16 @@
 #!/usr/bin/python
-# -*- coding: latin-1 -*-
+# -*- coding: UTF-8 -*-
 import requests
 import json
+import datetime
 import pandas as pd
 from dateutil.parser import parse
 
-token = 'EAACEdEose0cBANKDqQ2ZBbleC9yF9diyLZABMT5H7oxm0zraQ20F05VnhN5yZBFLL6gXxoUNuTlGZCvWSTAiiDxXQ6TYfl27lvOGY4TJhTHZCbDmzNP8dUIDrZBvFXzhbxpxArOnEi9x73JJ3kx78z2sAIZCPEaonS5fUnwpOfA5vGmTLSAtBPJ'
+def handleDate(x):
+    if isinstance(x, datetime.date):
+        return "{}-{}-{}".format(x.year, x.month, x.day)
+
+token = 'EAACEdEose0cBADNqQCOerYjMBsE5iiUp79vrqnh3FhoYWZAPmaZBfdsuZCi43IpZBsC7S2xICxNQunP2nZB2ENrMqM5r4KyZBA7Km1fLxzvrIvNUUE9KZCdhzwS2lf2ZCRUYBT3GhfirlGa3W0zASZC7tOUkZBpGpx1ENQSdbYZC2NeswAEsjKeZAGIM'
 
 group = {'689157281218904':'台北技能交換'}
 
@@ -20,7 +25,11 @@ for ele in group:
                 feeds.append([group[ele], information['message'], parse(information['updated_time']).date(), information['id']])
         res = requests.get(res.json()['paging']['next'])
 
-print(json.dump(feeds, sort_keys=True, indent=4, separators=(',', ': ')))
+# print(json.dumps(feeds, indent=4, separators=(',', ': '), ensure_ascii=False, default = handleDate))
+
+with open('feeds.json', 'w') as outfile:
+    json.dump(feeds, outfile, indent=4, separators=(',', ': '), ensure_ascii=False, default = handleDate)
+
 #最後將list轉換成dataframe，並輸出成csv檔
 #
 # information_df = pd.DataFrame(feeds, columns=['粉絲專頁', '發文內容', '發文時間'])
